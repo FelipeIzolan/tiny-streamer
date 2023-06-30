@@ -11,7 +11,7 @@ int is_speaking = 0;
 
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
-  is_speaking = *((float*)pInput) >= -0.01 ? 0 : 1;
+  is_speaking = *((float*)pInput) <= -0.01 ? 1 : 0;
 }
 
 int main(void) {
@@ -19,8 +19,8 @@ int main(void) {
 
   ma_device_config config  = ma_device_config_init(ma_device_type_capture);
   config.playback.format   = ma_format_f32;
-  config.playback.channels = 2;
-  config.sampleRate        = 48000;
+  config.playback.channels = 0;
+  config.sampleRate        = 0;
   config.dataCallback      = data_callback;
 
   if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) return -1;
