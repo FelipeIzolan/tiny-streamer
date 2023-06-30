@@ -1,16 +1,40 @@
 #define KIT_IMPL
 #include "kit.h"
 
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+
+int is_speaking = 0;
+
+void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
+{
+  is_speaking = *((float*)pInput) >= -0.01 ? 0 : 1;
+}
+
 int main(void) {
-    kit_Context *ctx = kit_create("hi", 128, 128, KIT_SCALE2X);
-    double delta;
+  ma_device device;
 
-    while (kit_step(ctx, &delta)) {
-        if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
-        kit_draw_rect(ctx,kit_rgb(0,255,0),KIT_BIG_RECT);
-        kit_draw_text(ctx, KIT_WHITE, "Hello world!", 10, 10);
-    }
+  ma_device_config config  = ma_device_config_init(ma_device_type_capture);
+  config.playback.format   = ma_format_f32;
+  config.playback.channels = 2;
+  config.sampleRate        = 48000;
+  config.dataCallback      = data_callback;
 
-    kit_destroy(ctx);
-    return 0;
+  if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) return -1;
+  ma_device_start(&device);
+
+  kit_Context *ctx = kit_create("Tiny Streamer", 128, 128, KIT_SCALE2X);
+  double delta;
+
+  while (kit_step(ctx, &delta)) {
+      if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
+      kit_draw_rect(ctx, is_speaking ? kit_rgb(0,255,0) : kit_rgb(255,0,0),KIT_BIG_RECT);
+  }
+
+  kit_destroy(ctx);
+  ma_device_uninit(&device);
+  return 0;
 }
