@@ -7,11 +7,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+extern int array_has(int arr[], int value);
+extern int update_history_index();
+
 int is_speaking = 0;
+int is_speaking_history[8] = {0,0,0,0,0,0,0,0};
 
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
-  is_speaking = *((float*)pInput) <= -0.01 ? 1 : 0;
+  is_speaking_history[update_history_index()] = *((float*)pInput) <= -0.01 ? 1 : 0;
+  is_speaking=array_has(is_speaking_history,1);
+  // is_speaking = *((float*)pInput) <= -0.01 ? 1 : 0;
+
 }
 
 int main(void) {
