@@ -72,7 +72,7 @@ typedef struct {
 #define KIT_WHITE    kit_rgb(0xff, 0xff, 0xff)
 #define KIT_BLACK    kit_rgb(0, 0, 0)
 
-kit_Context* kit_create(const char *title, int w, int h, int flags);
+kit_Context* kit_create(const char *title, int w, int h, int flags, char icon[]);
 void kit_destroy(kit_Context *ctx);
 bool kit_step(kit_Context *ctx, double *dt);
 void* kit_read_file(char *filename, int *len);
@@ -326,7 +326,7 @@ unhandled:
 static void *kit__font_png_data;
 static int   kit__font_png_size;
 
-kit_Context* kit_create(const char *title, int w, int h, int flags) {
+kit_Context* kit_create(const char *title, int w, int h, int flags, char icon[]) {
     kit_Context *ctx = kit__alloc(sizeof(kit_Context));
 
     ctx->screen = kit_create_image(w, h);
@@ -339,7 +339,7 @@ kit_Context* kit_create(const char *title, int w, int h, int flags) {
         .lpfnWndProc = kit__wndproc,
         .hCursor = LoadCursor(0, IDC_ARROW),
         .lpszClassName = title,
-        .hIcon = LoadIcon(GetModuleHandle(0), "icon"),
+        .hIcon = icon != "" ? LoadImageA(GetModuleHandle(0), icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE) : LoadIcon(GetModuleHandle(0), "icon"),
     });
 
     kit__scale_size_by_flags(&w, &h, flags);

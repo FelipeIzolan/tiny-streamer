@@ -33,7 +33,7 @@ int main(void) {
   if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) return -1;
   ma_device_start(&device);
 
-  kit_Context *ctx = kit_create("Tiny Streamer", 128, 128, KIT_SCALE2X);
+  kit_Context *ctx = kit_create("Tiny Streamer", 128, 128, KIT_SCALE2X, "icon.ico");
   double delta;
 
   while (kit_step(ctx, &delta)) {
