@@ -10,7 +10,7 @@
 #include <math.h>
 
 #define MAX_FRAMES 16
-#define MIN_FREQUENCY -0.010
+#define MIN_FREQUENCY -0.012
 
 typedef struct {
   int fmax;
