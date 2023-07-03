@@ -71,6 +71,7 @@ typedef struct {
 #define KIT_BIG_RECT kit_rect(0, 0, 0xffffff, 0xffffff)
 #define KIT_WHITE    kit_rgb(0xff, 0xff, 0xff)
 #define KIT_BLACK    kit_rgb(0, 0, 0)
+#define KIT_GREEN    kit_rgb(0, 255, 0)
 
 kit_Context* kit_create(const char *title, int w, int h, int flags, char icon[]);
 void kit_destroy(kit_Context *ctx);
@@ -339,7 +340,7 @@ kit_Context* kit_create(const char *title, int w, int h, int flags, char icon[])
         .lpfnWndProc = kit__wndproc,
         .hCursor = LoadCursor(0, IDC_ARROW),
         .lpszClassName = title,
-        .hIcon = icon != "" ? LoadImageA(GetModuleHandle(0), icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE) : LoadIcon(GetModuleHandle(0), "icon"),
+        .hIcon = icon != NULL ? LoadImageA(GetModuleHandle(0), icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE) : LoadIcon(GetModuleHandle(0), "icon"),
     });
 
     kit__scale_size_by_flags(&w, &h, flags);

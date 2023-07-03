@@ -86,7 +86,7 @@ int main(void) {
   while (kit_step(ctx, &delta)) {
       if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
 
-      kit_clear(ctx, KIT_BLACK);
+      kit_clear(ctx, KIT_GREEN);
       
       if (!is_speaking) {
         if ((int)idle.fcurrent > idle.fmax-1) idle.fcurrent = 0;
