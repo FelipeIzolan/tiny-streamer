@@ -9,6 +9,15 @@
 #include <stdio.h>
 #include <math.h>
 
+#define MAX_FRAMES 16
+
+typedef struct {
+  int fmax;
+  double fcurrent;
+  char *files[MAX_FRAMES];
+  kit_Image *sprites[MAX_FRAMES];
+} tiny_Frame;
+
 extern int update_history_index();
 extern int array_int_has(int arr[], int value);
 extern int get_length_in_directory(const char *p);
@@ -17,7 +26,6 @@ extern void read_files_in_directory(char ** addr, const char *p);
 int is_speaking = 0;
 int is_speaking_history[4] = {};
 
-
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
   is_speaking_history[update_history_index()] = *((float*)pInput) <= -0.009 ? 1 : 0;
@@ -25,20 +33,25 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 }
 
 int main(void) {
-  // ----- assets
-  int sprite_idle_frames = get_length_in_directory(".//assets//idle");
-  double sprite_idle_current_frame = 0;
-  
-  char *sprite_idle_file[sprite_idle_frames];
-  kit_Image *sprite_idle_kit[sprite_idle_frames];
-
-  read_files_in_directory(sprite_idle_file, ".//assets//idle");
-
-  for (int i = 0; i<sprite_idle_frames; i++) {
+  // ----- assets 
+  tiny_Frame idle;
+  idle.fmax = get_length_in_directory(".//assets//idle");
+  idle.fcurrent = 0;
+  read_files_in_directory(idle.files, ".//assets//idle");
+  for (int i = 0; i<idle.fmax; i++) { 
     char src[] = ".//assets//idle//";
-    strcat(src,sprite_idle_file[i]);
-
-    sprite_idle_kit[i] = kit_load_image_file(src);
+    strcat(src,idle.files[i]); 
+    idle.sprites[i] = kit_load_image_file(src);
+  }
+  // ------
+  tiny_Frame speak;
+  speak.fmax = get_length_in_directory(".//assets//speak");
+  speak.fcurrent = 0;
+  read_files_in_directory(speak.files, ".//assets//speak");
+  for (int i = 0; i<speak.fmax; i++) { 
+    char src[] = ".//assets//speak//";
+    strcat(src,speak.files[i]); 
+    speak.sprites[i] = kit_load_image_file(src);
   }
   // ------
 
@@ -58,17 +71,15 @@ int main(void) {
   // ------ ui
   kit_Context *ctx = kit_create(
       "Tiny Streamer",
-      sprite_idle_kit[0]->w * 4,
-      sprite_idle_kit[0]->h * 4,
+      idle.sprites[0]->w * 4,
+      idle.sprites[0]->h * 4,
       KIT_SCALE2X, 
       "icon.ico"
   );
 
-  printf("%i", ctx->win_w);
-
   double delta;
-  int x = (ctx->win_w/2-sprite_idle_kit[0]->w)/2;
-  int y = (ctx->win_h/2-sprite_idle_kit[0]->h)/2;
+  int x = (ctx->win_w/2-idle.sprites[0]->w)/2;
+  int y = (ctx->win_h/2-idle.sprites[0]->h)/2;
 
   while (kit_step(ctx, &delta)) {
       if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
@@ -76,11 +87,13 @@ int main(void) {
       kit_clear(ctx, KIT_BLACK);
       
       if (!is_speaking) {
-        if (abs(sprite_idle_current_frame)>sprite_idle_frames-1) sprite_idle_current_frame = 0;
-        kit_draw_image(ctx, sprite_idle_kit[abs(sprite_idle_current_frame)], x, y);
-        sprite_idle_current_frame += delta / 0.1;
+        if ((int)idle.fcurrent > idle.fmax-1) idle.fcurrent = 0;
+        kit_draw_image(ctx, idle.sprites[(int) idle.fcurrent], x, y);
+        idle.fcurrent += delta/0.1;
       } else {
-        // continue....
+        if ((int)speak.fcurrent > speak.fmax-1) speak.fcurrent = 0;
+        kit_draw_image(ctx, speak.sprites[(int) speak.fcurrent], x, y);
+        speak.fcurrent += delta/0.1;
       }
   }
   // ------
