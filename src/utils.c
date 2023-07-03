@@ -2,18 +2,18 @@
 #include <string.h>
 #include <stdlib.h>
 
-int array_int_has(int arr[], int value) {
-  for (int i=0; i < sizeof(*arr); i++) {
+int array_int_has(int arr[], int value, int length) {
+  for (int i=0; i < length; i++) {
     if (arr[i] == value) return 1;
   }
 
   return 0;
 }
 
-int update_history_index() {
+int update_int_index(int arr[], int length) {
   static int x = -1;
   x++;
-  if (x > 3) x=-1;
+  if (x > length-1) x=-1;
   return x;
 }
 

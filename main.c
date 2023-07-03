@@ -10,6 +10,7 @@
 #include <math.h>
 
 #define MAX_FRAMES 16
+#define MIN_FREQUENCY -0.010
 
 typedef struct {
   int fmax;
@@ -18,18 +19,19 @@ typedef struct {
   kit_Image *sprites[MAX_FRAMES];
 } tiny_Frame;
 
-extern int update_history_index();
-extern int array_int_has(int arr[], int value);
+extern int update_int_index(int arr[], int length);
+extern int array_int_has(int arr[], int value, int length);
 extern int get_length_in_directory(const char *p);
 extern void read_files_in_directory(char ** addr, const char *p);
 
 int is_speaking = 0;
-int is_speaking_history[4] = {};
+int is_speaking_history[24] = {};
+int is_speaking_history_length = sizeof(is_speaking_history)/sizeof(int);
 
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
-  is_speaking_history[update_history_index()] = *((float*)pInput) <= -0.009 ? 1 : 0;
-  is_speaking=array_int_has(is_speaking_history,1);
+  is_speaking_history[update_int_index(is_speaking_history, is_speaking_history_length)] = *((float*)pInput) <= MIN_FREQUENCY ? 1 : 0;
+  is_speaking=array_int_has(is_speaking_history, 1, is_speaking_history_length);
 }
 
 int main(void) {
