@@ -76,10 +76,9 @@ int main(void) {
       kit_clear(ctx, KIT_BLACK);
       
       if (!is_speaking) {
-        sprite_idle_current_frame += delta / 0.2;
-        int frame = (int) abs(sprite_idle_current_frame);
-        if (frame>=sprite_idle_frames-1) sprite_idle_current_frame = 0;
-        kit_draw_image(ctx, sprite_idle_kit[frame], x, y);
+        if (abs(sprite_idle_current_frame)>sprite_idle_frames-1) sprite_idle_current_frame = 0;
+        kit_draw_image(ctx, sprite_idle_kit[abs(sprite_idle_current_frame)], x, y);
+        sprite_idle_current_frame += delta / 0.1;
       } else {
         // continue....
       }
