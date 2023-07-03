@@ -21,11 +21,11 @@ The frames is limited to 16, but you can change it on main.c:12.\
 The names of images is important! name them keeping your desirable frames order.
 
 ## Development ⌨️
-I need test the voice-detector in another microphones (with my microphone it work correctly).
+I need test the voice-detector in another microphones (with my microphone it work correctly).\
 I will add key-bindings to change sprite-sheet speed and voice-detector frequency.
 
 ## License 📜
 
 - [tiny-streamer](https://github.com/FelipeIzolan/tiny-streamer) - unlicense
-- [kit](https://github.com/rxi/json.lua) - MIT
+- [kit](https://github.com/rxi/kit) - MIT
 - [miniaudio](https://github.com/mackron/miniaudio) - Public Domain or MIT
