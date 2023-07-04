@@ -1,6 +1,6 @@
 # tiny-streamer
 <img width=262 src="https://github.com/FelipeIzolan/tiny-streamer/assets/80170121/cdf6500c-c8dc-48f4-ac59-117535af028e"></img>\
-create your digital avatar for streams!
+create your digital avatar for streams/videos!
 
 ## How to use 🔑
 
@@ -22,7 +22,8 @@ The names of images is important! name them keeping your desirable frames order.
 
 ## Development ⌨️
 I need test the voice-detector in another microphones (with my microphone it work correctly).\
-I will add key-bindings to change sprite-sheet speed and voice-detector frequency.
+I will add key-bindings to change sprite-sheet speed and voice-detector frequency.\
+Emojis!
 
 ## License 📜
 
