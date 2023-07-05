@@ -13,12 +13,20 @@ create your digital avatar for streams/videos!
   - Create 'Window Capture'
   - Select 'tiny-streamer.exe'
   - Select the best 'Capture Method'
+  - Add chroma-key filter to green color.
   - Edit the scene!
 
 ## Assets 👾
 The software get assets dynamically on idle & speak folders.\
 The frames is limited to 16, but you can change it on main.c:12.\
 The names of images is important! name them keeping your desirable frames order.
+
+# Frequency 🎤
+Tiny-streamer use frequency to detect when you are speaking and you may need adjust it:\
+
+CTRL + '+' = to more sensitivity.\
+CTRL + '-' = to minus sensitivity.
+
 
 ## Development ⌨️
 I need test the voice-detector in another microphones (with my microphone it work correctly).\

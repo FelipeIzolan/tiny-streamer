@@ -10,7 +10,6 @@
 #include <math.h>
 
 #define MAX_FRAMES 16
-#define MIN_FREQUENCY -0.012
 
 typedef struct {
   int fmax;
@@ -28,6 +27,8 @@ int is_speaking = 0;
 int is_speaking_history[24] = {};
 int is_speaking_history_length = sizeof(is_speaking_history)/sizeof(int);
 
+float MIN_FREQUENCY = -0.012;
+
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
   is_speaking_history[update_int_index(is_speaking_history, is_speaking_history_length)] = *((float*)pInput) <= MIN_FREQUENCY ? 1 : 0;
@@ -39,7 +40,9 @@ int main(void) {
   tiny_Frame idle;
   idle.fmax = get_length_in_directory(".//assets//idle");
   idle.fcurrent = 0;
+  
   read_files_in_directory(idle.files, ".//assets//idle");
+  
   for (int i = 0; i<idle.fmax; i++) { 
     char src[] = ".//assets//idle//";
     strcat(src,idle.files[i]); 
@@ -49,7 +52,9 @@ int main(void) {
   tiny_Frame speak;
   speak.fmax = get_length_in_directory(".//assets//speak");
   speak.fcurrent = 0;
+  
   read_files_in_directory(speak.files, ".//assets//speak");
+
   for (int i = 0; i<speak.fmax; i++) { 
     char src[] = ".//assets//speak//";
     strcat(src,speak.files[i]); 
@@ -84,10 +89,19 @@ int main(void) {
   int y = (ctx->win_h/2-idle.sprites[0]->h)/2;
 
   while (kit_step(ctx, &delta)) {
+      kit_clear(ctx, KIT_GREEN);
       if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
 
-      kit_clear(ctx, KIT_GREEN);
-      
+      if (kit_key_down(ctx, VK_CONTROL)) {
+        char f[10];
+        sprintf(f, "%f", MIN_FREQUENCY);
+
+        kit_draw_text(ctx, KIT_WHITE, f, 2, 2);
+
+        if (kit_key_pressed(ctx, VK_OEM_PLUS)) MIN_FREQUENCY += 0.001;
+        if (kit_key_pressed(ctx, VK_OEM_MINUS)) MIN_FREQUENCY -= 0.001;
+      }
+ 
       if (!is_speaking) {
         if ((int)idle.fcurrent > idle.fmax-1) idle.fcurrent = 0;
         kit_draw_image(ctx, idle.sprites[(int) idle.fcurrent], x, y);
