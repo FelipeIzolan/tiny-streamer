@@ -21,7 +21,7 @@ typedef struct {
 extern int update_int_index(int arr[], int length);
 extern int array_int_has(int arr[], int value, int length);
 extern int get_length_in_directory(const char *p);
-extern void read_files_in_directory(char ** addr, const char *p);
+extern void get_files_in_directory(char ** addr, const char *p);
 
 int is_speaking = 0;
 int is_speaking_history[24] = {};
@@ -36,12 +36,13 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 }
 
 int main(void) {
+
   // ----- assets 
   tiny_Frame idle;
   idle.fmax = get_length_in_directory(".//assets//idle");
   idle.fcurrent = 0;
   
-  read_files_in_directory(idle.files, ".//assets//idle");
+  get_files_in_directory(idle.files, ".//assets//idle");
   
   for (int i = 0; i<idle.fmax; i++) { 
     char src[] = ".//assets//idle//";
@@ -53,7 +54,7 @@ int main(void) {
   speak.fmax = get_length_in_directory(".//assets//speak");
   speak.fcurrent = 0;
   
-  read_files_in_directory(speak.files, ".//assets//speak");
+  get_files_in_directory(speak.files, ".//assets//speak");
 
   for (int i = 0; i<speak.fmax; i++) { 
     char src[] = ".//assets//speak//";

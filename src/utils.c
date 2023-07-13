@@ -33,7 +33,7 @@ int get_length_in_directory(const char *p) {
   return count;
 }
 
-void read_files_in_directory(char ** addr, const char *p) {
+void get_files_in_directory(char ** addr, const char *p) {
   DIR *x = opendir(p);
   struct dirent *f;
   int i = 0;
