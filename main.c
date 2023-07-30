@@ -1,3 +1,7 @@
+#ifndef _WIN32
+#error "Windows OS is required for this software."
+#endif
+
 #define KIT_IMPL
 #include "kit.h"
 
