@@ -8,6 +8,7 @@ create your digital avatar for streams/videos!
 - Determine assets
   - idle: on /assets/idle
   - speak: on /assets/speak
+  - emojis: on /assets/emojis
 - Execute tiny-streamer.exe
 - Configure OBS
   - Create 'Window Capture'
@@ -17,9 +18,19 @@ create your digital avatar for streams/videos!
   - Edit the scene!
 
 ## Assets 👾
-The software get assets dynamically on idle & speak folders.\
+The software get assets dynamically on idle & speak & emojis folders.\
 The frames is limited to 16, but you can change it on main.c:12.\
 The names of images is important! name them keeping your desirable frames order.
+
+## Emojis 😊
+<img width=312 src="https://github.com/FelipeIzolan/tiny-streamer/assets/80170121/7ac8b10e-e0e2-4c02-b15e-c0374258fa75"/>
+
+To use emojis:
+- Add somes sprites on /assets/emojis
+- RIGHT-CONTROL + NUMBER:
+  - RIGHT-CONTROL + 1 - first emoji.
+  - RIGHT-CONTROL + 2
+  - ...
 
 ## Frequency 🎤
 Tiny-streamer use frequency to detect when you are speaking and you may need adjust it:
