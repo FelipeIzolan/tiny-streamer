@@ -28,7 +28,7 @@ The names of images is important! name them keeping your desirable frames order.
 To use emojis:
 - Add somes sprites on /assets/emojis
 - RIGHT-CONTROL + NUMBER:
-  - RIGHT-CONTROL + 1 - first emoji.
+  - RIGHT-CONTROL + 1
   - RIGHT-CONTROL + 2
   - ...
 
