@@ -107,18 +107,18 @@ int main(void) {
       kit_clear(ctx, KIT_GREEN);
       if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
 
-      if (GetAsyncKeyState(VK_F1)) emojis.fcurrent = 0;
-      if (GetAsyncKeyState(VK_F2)) emojis.fcurrent = 1;
-      if (GetAsyncKeyState(VK_F3)) emojis.fcurrent = 2;
-      if (GetAsyncKeyState(VK_F4)) emojis.fcurrent = 3;
-      if (GetAsyncKeyState(VK_F5)) emojis.fcurrent = 4;
-      if (GetAsyncKeyState(VK_F6)) emojis.fcurrent = 5;
-      if (GetAsyncKeyState(VK_F7)) emojis.fcurrent = 6;
-      if (GetAsyncKeyState(VK_F8)) emojis.fcurrent = 7;
-      if (GetAsyncKeyState(VK_F9)) emojis.fcurrent = 8;
-      if (GetAsyncKeyState(VK_F10)) emojis.fcurrent = 9;
-      if (GetAsyncKeyState(VK_F11)) emojis.fcurrent = 10;
-      if (GetAsyncKeyState(VK_F12)) emojis.fcurrent = 10;
+      if (GetAsyncKeyState(VK_F1) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 0;
+      if (GetAsyncKeyState(VK_F2) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 1;
+      if (GetAsyncKeyState(VK_F3) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 2;
+      if (GetAsyncKeyState(VK_F4) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 3;
+      if (GetAsyncKeyState(VK_F5) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 4;
+      if (GetAsyncKeyState(VK_F6) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 5;
+      if (GetAsyncKeyState(VK_F7) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 6;
+      if (GetAsyncKeyState(VK_F8) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 7;
+      if (GetAsyncKeyState(VK_F9) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 8;
+      if (GetAsyncKeyState(VK_F10) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 9;
+      if (GetAsyncKeyState(VK_F11) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 10;
+      if (GetAsyncKeyState(VK_F12) && GetAsyncKeyState(VK_CONTROL)) emojis.fcurrent = 10;
       
       if (kit_key_down(ctx, VK_CONTROL)) {
         char f[10];
