@@ -8,12 +8,13 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 
+#include <windows.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 #define MAX_FRAMES 16
+float MIN_FREQUENCY = -0.012;
 
 typedef struct {
   int fmax;
@@ -31,8 +32,6 @@ int is_speaking = 0;
 int is_speaking_history[24] = {};
 int is_speaking_history_length = sizeof(is_speaking_history)/sizeof(int);
 
-float MIN_FREQUENCY = -0.012;
-
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
   is_speaking_history[update_int_index(is_speaking_history, is_speaking_history_length)] = *((float*)pInput) <= MIN_FREQUENCY ? 1 : 0;
@@ -40,34 +39,45 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 }
 
 int main(void) {
-
-  // ----- assets 
+  // ----- Idle Assets 
   tiny_Frame idle;
   idle.fmax = get_length_in_directory(".//assets//idle");
   idle.fcurrent = 0;
   
   get_files_in_directory(idle.files, ".//assets//idle");
   
-  for (int i = 0; i<idle.fmax; i++) { 
+  for (int i = 0; i < idle.fmax; i++) { 
     char src[] = ".//assets//idle//";
     strcat(src,idle.files[i]); 
     idle.sprites[i] = kit_load_image_file(src);
   }
-  // ------
+  // ------ Speak Assets
   tiny_Frame speak;
   speak.fmax = get_length_in_directory(".//assets//speak");
   speak.fcurrent = 0;
   
   get_files_in_directory(speak.files, ".//assets//speak");
 
-  for (int i = 0; i<speak.fmax; i++) { 
+  for (int i = 0; i < speak.fmax; i++) { 
     char src[] = ".//assets//speak//";
     strcat(src,speak.files[i]); 
     speak.sprites[i] = kit_load_image_file(src);
   }
+  // ------ Emojis Assets
+  tiny_Frame emojis;
+  emojis.fmax = get_length_in_directory(".//assets//emojis");
+  emojis.fcurrent = -1;
+
+  get_files_in_directory(emojis.files, ".//assets//emojis");
+  
+  for (int i = 0; i < emojis.fmax; i++) { 
+    char src[] = ".//assets//emojis//";
+    strcat(src,emojis.files[i]); 
+    emojis.sprites[i] = kit_load_image_file(src);
+  }
   // ------
 
-  // ------ voice detector
+  // ------ Voice Detector
   ma_device device;
 
   ma_device_config config  = ma_device_config_init(ma_device_type_capture);
@@ -80,7 +90,7 @@ int main(void) {
   ma_device_start(&device);
   // ------
 
-  // ------ ui
+  // ------ UI
   kit_Context *ctx = kit_create(
       "Tiny Streamer",
       idle.sprites[0]->w * 4,
@@ -97,6 +107,19 @@ int main(void) {
       kit_clear(ctx, KIT_GREEN);
       if (kit_key_pressed(ctx, VK_ESCAPE)) { break; }
 
+      if (GetAsyncKeyState(VK_F1)) emojis.fcurrent = 0;
+      if (GetAsyncKeyState(VK_F2)) emojis.fcurrent = 1;
+      if (GetAsyncKeyState(VK_F3)) emojis.fcurrent = 2;
+      if (GetAsyncKeyState(VK_F4)) emojis.fcurrent = 3;
+      if (GetAsyncKeyState(VK_F5)) emojis.fcurrent = 4;
+      if (GetAsyncKeyState(VK_F6)) emojis.fcurrent = 5;
+      if (GetAsyncKeyState(VK_F7)) emojis.fcurrent = 6;
+      if (GetAsyncKeyState(VK_F8)) emojis.fcurrent = 7;
+      if (GetAsyncKeyState(VK_F9)) emojis.fcurrent = 8;
+      if (GetAsyncKeyState(VK_F10)) emojis.fcurrent = 9;
+      if (GetAsyncKeyState(VK_F11)) emojis.fcurrent = 10;
+      if (GetAsyncKeyState(VK_F12)) emojis.fcurrent = 10;
+      
       if (kit_key_down(ctx, VK_CONTROL)) {
         char f[10];
         sprintf(f, "%f", MIN_FREQUENCY);
@@ -107,15 +130,24 @@ int main(void) {
         if (kit_key_pressed(ctx, VK_OEM_MINUS)) MIN_FREQUENCY -= 0.001;
       }
  
-      if (!is_speaking) {
-        if ((int)idle.fcurrent > idle.fmax-1) idle.fcurrent = 0;
-        kit_draw_image(ctx, idle.sprites[(int) idle.fcurrent], x, y);
-        idle.fcurrent += delta/0.1;
-      } else {
-        if ((int)speak.fcurrent > speak.fmax-1) speak.fcurrent = 0;
+      if (is_speaking && emojis.fcurrent == -1) {
+        if ((int)speak.fcurrent >= speak.fmax) speak.fcurrent = 0;
         kit_draw_image(ctx, speak.sprites[(int) speak.fcurrent], x, y);
         speak.fcurrent += delta/0.1;
       }
+
+      if (!is_speaking && emojis.fcurrent == -1) {
+        if ((int)idle.fcurrent >= idle.fmax) idle.fcurrent = 0;
+        kit_draw_image(ctx, idle.sprites[(int) idle.fcurrent], x, y);
+        idle.fcurrent += delta/0.1;
+      }
+
+      if (emojis.fcurrent != -1) {
+        emojis.fcurrent = emojis.fcurrent >= emojis.fmax ? emojis.fmax-1 : emojis.fcurrent;
+        kit_draw_image(ctx, emojis.sprites[(int)emojis.fcurrent], x, y);
+      }
+
+      emojis.fcurrent = -1;
   }
   // ------
 

@@ -141,6 +141,7 @@ static void* kit__alloc(int n) {
 
 static bool kit__check_input_flag(uint8_t *t, uint32_t idx, uint32_t cap, int flag) {
     if (idx > cap) { return false; }
+    if (t[idx]) printf("Felipe Izolan is here!\n");
     return t[idx] & flag ? true : false;
 }
 
