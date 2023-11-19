@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "utils.c"
 
 #define MAX_FRAMES 16
 float MIN_FREQUENCY = -0.012;
@@ -23,18 +24,13 @@ typedef struct {
   kit_Image *sprites[MAX_FRAMES];
 } tiny_Frame;
 
-extern int update_int_index(int arr[], int length);
-extern int array_int_has(int arr[], int value, int length);
-extern int get_length_in_directory(const char *p);
-extern void get_files_in_directory(char ** addr, const char *p);
-
 int is_speaking = 0;
 int is_speaking_history[24] = {};
 int is_speaking_history_length = sizeof(is_speaking_history)/sizeof(int);
 
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
-  is_speaking_history[update_int_index(is_speaking_history, is_speaking_history_length)] = *((float*)pInput) <= MIN_FREQUENCY ? 1 : 0;
+  is_speaking_history[update_index(is_speaking_history, is_speaking_history_length)] = *((float*)pInput) <= MIN_FREQUENCY ? 1 : 0;
   is_speaking=array_int_has(is_speaking_history, 1, is_speaking_history_length);
 }
 
@@ -43,7 +39,7 @@ int main(void) {
   tiny_Frame idle;
   idle.fmax = get_length_in_directory(".//assets//idle");
   idle.fcurrent = 0;
-  
+
   get_files_in_directory(idle.files, ".//assets//idle");
   
   for (int i = 0; i < idle.fmax; i++) { 
@@ -51,6 +47,7 @@ int main(void) {
     strcat(src,idle.files[i]); 
     idle.sprites[i] = kit_load_image_file(src);
   }
+
   // ------ Speak Assets
   tiny_Frame speak;
   speak.fmax = get_length_in_directory(".//assets//speak");
@@ -63,6 +60,7 @@ int main(void) {
     strcat(src,speak.files[i]); 
     speak.sprites[i] = kit_load_image_file(src);
   }
+
   // ------ Emojis Assets
   tiny_Frame emojis;
   emojis.fmax = get_length_in_directory(".//assets//emojis");
@@ -73,9 +71,12 @@ int main(void) {
   for (int i = 0; i < emojis.fmax; i++) { 
     char src[] = ".//assets//emojis//";
     strcat(src,emojis.files[i]); 
-    emojis.sprites[i] = kit_load_image_file(src);
+    emojis.sprites[i] = kit_load_image_file(src); 
   }
   // ------
+
+  if (idle.fmax == 0) error("No idle assets found.");
+  if (speak.fmax == 0) error("No speak assets found.");
 
   // ------ Voice Detector
   ma_device device;

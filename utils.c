@@ -1,23 +1,24 @@
 #include <dirent.h>
 #include <string.h>
 #include <stdlib.h>
+#include <windows.h>
 
 int array_int_has(int arr[], int value, int length) {
-  for (int i=0; i < length; i++) {
+  for (int i = 0; i < length; i++) {
     if (arr[i] == value) return 1;
   }
 
   return 0;
 }
 
-int update_int_index(int arr[], int length) {
+int update_index(int arr[], int length) {
   static int x = -1;
   x++;
-  if (x > length-1) x=-1;
+  if (x == length - 1) x = 0;
   return x;
 }
 
-int get_length_in_directory(const char *p) {
+int get_length_in_directory(char *p) {
   DIR *x = opendir(p);  
   struct dirent *f;
   int count = 0;
@@ -33,7 +34,7 @@ int get_length_in_directory(const char *p) {
   return count;
 }
 
-void get_files_in_directory(char ** addr, const char *p) {
+void get_files_in_directory(char ** addr, char *p) {
   DIR *x = opendir(p);
   struct dirent *f;
   int i = 0;
@@ -48,4 +49,9 @@ void get_files_in_directory(char ** addr, const char *p) {
   }
 
   closedir(x);
+}
+
+void error(char * text) {
+  MessageBox(NULL, text, "tiny-streamer", MB_OK);
+  exit(1);
 }
